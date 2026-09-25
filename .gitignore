@@ -1,0 +1,37 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Caches and test runners
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Datasets and intermediate data
+dataset/
+intermediate/
+output/
+SUBMISSION_V1/
+*.parquet
+*.tsv
+!utils/*.tsv
+*.zip
+*.tar.gz
+
+# Environment and secrets
+.env
+.env.*
+*.pem
+*.key
+credentials*
+secret*
+
+# OS and IDE files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+.tmp/
