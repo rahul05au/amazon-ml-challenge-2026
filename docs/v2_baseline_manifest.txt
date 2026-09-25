@@ -3,6 +3,7 @@
 # ==============================================================================
 Freeze Date: 2026-09-25
 Version: V2.0-frozen-candidate-baseline
+Git Commit: 2b378e8749bcfa3a195b098197aa350ca9623e1d
 Git Tag: v2-candidate-baseline
 
 1. V2 FROZEN PARAMETERS
