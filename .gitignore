@@ -1,37 +1,107 @@
-# Byte-compiled / optimized / DLL files
+# ==============================================================================
+# Byte-compiled / Optimized Python Files
+# ==============================================================================
 __pycache__/
 *.py[cod]
 *$py.class
 
-# Caches and test runners
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
+# ==============================================================================
+# Virtual Environments
+# ==============================================================================
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
 
-# Datasets and intermediate data
+# ==============================================================================
+# Secrets and Credentials (NEVER COMMIT)
+# ==============================================================================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pkcs12
+credentials*
+secret*
+*service_account*.json
+*service-account*.json
+
+# ==============================================================================
+# Databases and Dumps
+# ==============================================================================
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+database/
+databases/
+db/
+mysql/
+backup/
+backups/
+
+# ==============================================================================
+# Datasets and Large Data Files
+# ==============================================================================
 dataset/
 intermediate/
-output/
-SUBMISSION_V1/
-*.parquet
 *.tsv
-!utils/*.tsv
+*.csv
+*.parquet
+*.jsonl
 *.zip
 *.tar.gz
 
-# Environment and secrets
-.env
-.env.*
-*.pem
-*.key
-credentials*
-secret*
+# ==============================================================================
+# Generated Submissions and Competition Artifacts
+# ==============================================================================
+output/
+SUBMISSION_V1/
+FINAL_THIRD_SUBMISSION/
+FINAL_9918_BASELINE/
+FINAL_9918_PLUS/
 
-# OS and IDE files
+# ==============================================================================
+# Heavy Model Binaries and Intermediate Model Dumps
+# ==============================================================================
+*.safetensors
+*.pt
+*.pth
+*.bin
+*.pkl
+models/v10_semantic_source*/
+models/v12_*.txt
+models/v13_*.txt
+models/v5b_*.txt
+models/v2_frozen_backup_*.txt
+
+# ==============================================================================
+# Scratch, Logs, and Temporary Files
+# ==============================================================================
+scratch/
+.tmp/
+*.log
+logs/
+
+# ==============================================================================
+# Test and Coverage Caches
+# ==============================================================================
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ==============================================================================
+# OS and IDE Files
+# ==============================================================================
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
 *.swp
 *.swo
-.tmp/

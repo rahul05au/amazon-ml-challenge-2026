@@ -1,0 +1,15 @@
+{
+  "src": "source2",
+  "split": "val1",
+  "old_candidates": 558054,
+  "new_candidates": 594285,
+  "recovered_gold": 88,
+  "gold_passed_threshold": 0,
+  "gold_accepted_final": 0,
+  "gold_rejected_by_threshold": 88,
+  "gold_rejected_by_exclusivity": 0,
+  "true_pairs_added": 985,
+  "false_positives_added": 38,
+  "macro_f05_old": 0.85203,
+  "macro_f05_v13": 0.89946
+}

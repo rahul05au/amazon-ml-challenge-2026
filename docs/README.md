@@ -4,8 +4,6 @@ This directory contains technical documentation for the entity resolution projec
 
 ## Documents
 
-* **[V1_BASELINE.md](V1_BASELINE.md)**: Official documentation of the frozen V1 baseline, including architecture, blocking strategy, feature definitions, LightGBM models, validation metrics, test inference runtime, and validator scorecard.
-
-## Future Documentation
-
-Future experiment reports (V2 blocking improvements, V3 candidate pruning, V4 matcher updates) will be added here as validated milestones are achieved.
+* **[V1_BASELINE.md](V1_BASELINE.md)**: Official documentation of the frozen V1 baseline.
+* **[V2_FROZEN_BASELINE.md](V2_FROZEN_BASELINE.md)**: Official candidate-generation baseline with additive TF-IDF retrieval and lexical score pruning.
+* **[R50_SUBMISSION_CANDIDATE.md](R50_SUBMISSION_CANDIDATE.md)**: Active submission candidate (R50 hard-negative replacement retraining).
