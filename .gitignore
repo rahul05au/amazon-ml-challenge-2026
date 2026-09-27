@@ -60,10 +60,13 @@ intermediate/
 # Generated Submissions and Competition Artifacts
 # ==============================================================================
 output/
-SUBMISSION_V1/
+SUBMISSION_*/
+FINAL_*_BASELINE*/
+FINAL_*_PLUS*/
+FINAL_PUBLIC_*/
 FINAL_THIRD_SUBMISSION/
-FINAL_9918_BASELINE/
-FINAL_9918_PLUS/
+FINAL_SUBMISSION_PACKAGE/
+FINAL_SUBMISSION_PACKAGE.zip
 
 # ==============================================================================
 # Heavy Model Binaries and Intermediate Model Dumps
@@ -75,7 +78,6 @@ FINAL_9918_PLUS/
 *.pkl
 models/v10_semantic_source*/
 models/v12_*.txt
-models/v13_*.txt
 models/v5b_*.txt
 models/v2_frozen_backup_*.txt
 

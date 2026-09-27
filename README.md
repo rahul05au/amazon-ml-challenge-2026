@@ -51,36 +51,41 @@ Raw TSVs (dataset/)
 ## Repository Structure
 ```text
 student_resource/
-├── dataset/                   # Raw train and test TSVs
-│   ├── test/
-│   └── train/
-├── docs/                      # Technical documentation and baseline
-│   ├── README.md              # Documentation index
-│   └── V1_BASELINE.md         # Full V1 methodology & measured metrics
 ├── models/                    # Trained LightGBM models & thresholds
 │   ├── lgb_source2.txt        # LightGBM booster for S1 -> S2
 │   ├── lgb_source3.txt        # LightGBM booster for S1 -> S3
-│   ├── threshold_source2.json # Optimal threshold (0.70)
-│   └── threshold_source3.json # Optimal threshold (0.65)
-├── src/                       # Production ML pipeline
+│   ├── threshold_source2.json # Source 2 threshold
+│   ├── threshold_source3.json # Source 3 threshold
+│   ├── v13_1_stage1_source2.txt
+│   ├── v13_1_stage1_source3.txt
+│   ├── v13_1_stage2_source2.txt
+│   └── v13_1_stage2_source3.txt
+├── src/                       # Core ML pipeline modules
 │   ├── __init__.py
-│   ├── config.py              # Centralized paths and parameters
+│   ├── config.py              # Centralized paths and configuration
 │   ├── normalization.py       # Multi-lingual text & Unicode normalizer
-│   ├── ingestion.py           # DuckDB TSV streaming ingestion
-│   ├── blocking.py            # 5-pass candidate pair indexing
-│   ├── blocking_eval.py       # Candidate recall evaluation on ground truth
-│   ├── features.py            # 15 vectorized RapidFuzz similarity features
-│   ├── matcher.py             # Model training, thresholding & inference
-│   └── submission.py          # TSV export and formatting
-├── tests/                     # Unit and regression test suite
-│   ├── __init__.py
-│   ├── test_features.py       # Feature generation tests
-│   └── test_normalization.py  # Text normalization and regex tests
-├── utils/                     # Competition submission validator
+│   ├── ingestion.py           # DuckDB streaming ingestion
+│   ├── blocking.py            # Multi-pass candidate indexing
+│   ├── lexical_blocking.py    # Lexical blocking rules
+│   ├── features.py            # Vectorized RapidFuzz similarity features
+│   ├── matcher.py             # Matching engine & F0.5 metrics
+│   └── submission.py          # TSV submission export
+├── experiments/               # Core pipeline stages and collective matchers
+│   ├── v12_assignment_lgb.py
+│   ├── v12_1_collective_matcher.py
+│   ├── v12_1_candidate_expansion.py
+│   ├── v13_1_pipeline.py
+│   ├── v13_1_execute.py
+│   └── v13_candidate_audit_and_eval.py
+├── scripts/                   # Production inference & recovery scripts
+│   ├── generate_final_third_submission.py
+│   ├── apply_submission5_recoveries.py
+│   └── import_submission_candidates.py
+├── utils/                     # Official competition submission validator
 │   └── validate_submission.py
-├── .gitignore
-├── README.md
-└── requirements.txt
+├── Documentation_template.md  # Official submission technical documentation
+├── requirements.txt
+└── README.md
 ```
 
 ---
@@ -97,48 +102,27 @@ Core libraries:
 - `lightgbm` (Gradient boosted decision trees, Apache-2.0, <= 8B parameters)
 - `rapidfuzz` (C++ vectorized string similarity calculations)
 - `pyarrow` (Parquet streaming and memory management)
-- `pandas`, `numpy`, `pytest`
+- `pandas`, `numpy`
 
 ---
 
 ## Running the Pipeline
 
-### 1. Run Unit Tests
-```bash
-python -m pytest tests/ -v
-```
-
-### 2. Ingest & Normalize Data
+### 1. Ingest & Normalize Data
 ```bash
 python -m src.ingestion --split train
 python -m src.ingestion --split test
 ```
 
-### 3. Generate Candidates via Multi-Pass Blocking
+### 2. Generate Candidate Pairs
 ```bash
-python -m src.blocking --split train
 python -m src.blocking --split test
 ```
 
-### 4. Evaluate Candidate Recall
+### 3. Generate Submission Predictions
 ```bash
-python -m src.blocking_eval --target source2
-python -m src.blocking_eval --target source3
-```
-
-### 5. Train Matching Models
-```bash
-python -m src.matcher --mode train --target both
-```
-
-### 6. Predict Test Matches
-```bash
-python -m src.matcher --mode predict --target both
-```
-
-### 7. Export Submission TSVs
-```bash
-python -c "from src.submission import export_candidate_pairs, export_matching_results; export_candidate_pairs('test'); export_matching_results('intermediate/test/matches_source2.parquet', 'intermediate/test/matches_source3.parquet', 'test')"
+python scripts/generate_final_third_submission.py
+python scripts/apply_submission5_recoveries.py
 ```
 
 ---
@@ -149,27 +133,10 @@ Run the submission validator against output files:
 python utils/validate_submission.py \
     --matching output/matching_results.tsv \
     --candidate output/candidate_pairs.tsv \
-    --test-dir dataset/test \
-    --check-ids
+    --test-dir dataset/test
 ```
 
 ---
 
-## Current V1 Baseline
-Detailed technical architecture, metric breakdown, and error analysis are documented in **[docs/V1_BASELINE.md](docs/V1_BASELINE.md)**:
-- **Validation Macro $F_{0.5}$:** `0.7016` ($S2$), `0.7066` ($S3$), combined `~0.704`
-- **Validation Precision:** ~85.3%
-- **Blocking Recall:** 86.88% ($S2$), 86.62% ($S3$)
-- **Candidates Scored:** 158,889,259 pairs across 1,732,544 test $S1$ entities
-- **Total Test Matches:** 6,586,107 matches
-- **Singleton Accuracy:** >90% (121,033 singletons identified)
-- **Submission Validation:** `PASS` (0 invalid IDs, 100% candidate containment)
-
----
-
-## Future Experiments
-Future research directions targeting V2/V3 enhancements:
-1. **Rare Token & Phonetic Blocking:** Expanding blocking passes to capture phonetic and n-gram variations.
-2. **Candidate Pruning & Meta-Blocking:** Discarding low-probability candidate pairs prior to feature extraction to reduce candidate density.
-3. **Hard-Negative Training:** Sampling harder negatives to improve model discriminability.
-4. **Post-Processing Vetoes:** Applying precise cross-source location consistency vetoes to further minimize false positive merges.
+## Technical Documentation
+For full details on methodology, candidate generation, two-stage collective LightGBM matching, target exclusivity, singleton recovery, and test set metrics, please refer to **[Documentation_template.md](Documentation_template.md)**.
